@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Tic Tac Toe</title>
+        <style>
+          *{
+            box-sizing: border-box;
+            margin:0px;
+            padding:0px;
+            user-select: none;
+          }
+
+           .container:nth-child(1){border-right:1px solid;border-bottom:1px solid;}
+           .container:nth-child(4){border-right:1px solid;border-bottom:1px solid;}
+           .container:nth-child(7){border-right:1px solid;}
+           .container:nth-child(3){border-left:1px solid;border-bottom:1px solid;}
+           .container:nth-child(6){border-left:1px solid;border-bottom:1px solid;}
+           .container:nth-child(9){border-left:1px solid;}
+           .container:nth-child(2){border-bottom:1px solid;}
+           .container:nth-child(5){border-bottom:1px solid;}
+           .container{
+             font-size: 10vh;
+              padding-top:20px;
+
+           }
+
+           section{
+               text-align: center;
+               margin: auto;
+               width:60vh;
+               height:60vh;
+               position:absolute;
+               top: 50%;
+               left:50%;
+               transform: translate(-50%,-50%);
+               background-color: rgb(6, 100, 6);
+               border:20px solid rgb(197, 197, 194);
+               border-radius: 10px;
+               color:aliceblue;
+               font-family:papyrus;
+               word-spacing: 20px;
+               font-weight: bold;
+           }
+           #single_box,#double_box,#game_interface,#game_over{
+             display:none;
+           }
+           #start_box{
+               font-size:4vh;
+               position:relative;
+               top: 50%;
+               left:50%;
+               transform: translate(-50%,-50%);
+           }
+           .spatial{display:inline-block;margin:20px;font-weight: bold;font-size: 3vh;word-spacing: 20px;text-decoration: underline;cursor: pointer;}
+
+           #single_box,#double_box,#game_over{
+            font-size:4vh;
+               position:relative;
+               top: 50%;
+               left:50%;
+               transform: translate(-50%,-50%);
+           }
+           #game_interface{
+               height:60vh;
+               display: grid;
+               grid-template-columns: 33.3333% 33.3333% 33.3333%;
+               grid-template-rows: 18.5vh 18.5vh 18vh;
+               display:none;
+               vertical-align: text-bottom;
+           }
+        </style>
+    </head>
+
+    <body>
+        <section >
+            <div id='start_box'>
+                <div class='statement'>SELECT THE NUMBER OF PLAYERS</div>
+                <div class='spatial' id='single' onclick='player(1)'>SINGLE PLAYER</div>
+                <div class='spatial' id='double' onclick='player(2)'>DOUBLE PLAYER</div>
+            </div>
+            <div id='single_box'>
+                <div class='statement'>SELECT THE GIVEN VALUE FOR YOU</div>
+                <div class='spatial' class='x' onclick='choice("X")'>X</div>
+                <div class='spatial' class='o' onclick='choice("O")'>O</div>
+                </div>
+            <div id='double_box'>
+                <div class='statement'>SELECT THE GIVEN VALUE FOR PLAYER ONE</div>
+                <div class='spatial' class='x' onclick='choice("X")'>X</div>
+                <div class='spatial' class='o' onclick='choice("O")'>O</div>
+                </div>
+           <div id='game_interface'>
+
+              <div class='container' onclick='response(0);'></div>
+              <div class='container' onclick='response(1);'></div>
+              <div class='container' onclick='response(2);'></div>
+
+              <div class='container' onclick='response(3);'></div>
+              <div class='container' onclick='response(4);'></div>
+              <div class='container' onclick='response(5);'></div>
+
+              <div class='container' onclick='response(6);'></div>
+              <div class='container' onclick='response(7);'></div>
+              <div class='container' onclick='response(8);'></div>
+
+            </div>
+            <div id='game_over'>
+              <div class='statement'>GAME OVER</div>
+              <div class='spatial' id='end_box'></div><br>
+              <button onclick='location.reload();' style='background-color: aliceblue;color:rgb(9, 90, 9);padding:10px;font-size:3vh;cursor: pointer;'>NEW GAME</button>
+            </div>
+        </section>
+    </body>
+    <script>
+        var container = document.querySelectorAll('.container');
+        var end_box = document.querySelector('#end_box');
+        var start_box = document.querySelector('#start_box');
+        var single_box = document.querySelector('#single_box');
+        var double_box = document.querySelector('#double_box');
+        var game_over = document.querySelector('#game_over');
+        var game_interface = document.querySelector('#game_interface');
+        var counter,sign_in,indicator,xo_count;
+
+        //Function That execute when user selects the game mode single player = 1 and double player = 2
+        function player(a){
+            counter = a;
+            start_box.style.display='none';
+            if(counter == 1){
+            single_box.style.display='block';
+            }else{
+                double_box.style.display='block';
+            }
+        }
+
+        //The User starts the game always so he selects the symbol with this function
+        function choice(a){
+            sign_in = a;
+            if(counter == 1){
+            single_box.style.display='none';
+            }else{
+                double_box.style.display='none';
+            }
+            game_interface.style.display='grid';
+
+            if(sign_in == 'X'){
+                    xo_count = 2;
+                 }else if(sign_in == 'O'){
+                    xo_count = 3;
+                 }
+        }
+
+        //triplet checker
+        function checker(player_count,sign){
+          var tie = 0;
+            for(let i=0;i<9;i++){
+              if(container[i].innerHTML !== '')
+              tie++;
+
+            }
+
+              if(container[0].innerHTML == container[1].innerHTML && container[1].innerHTML == container[2].innerHTML && container[1].innerHTML !== ''){
+                console.log('yes man .,.,.,.');
+                if(player_count == 1){
+                                if(sign == container[1].innerHTML){
+                                end_box.innerHTML= 'YOU WON THE GAME';
+                                game_over.style.display='block';
+                                game_interface.style.display='none';
+                                }else{
+                                end_box.innerHTML='SORRY! YOU LOST';
+                                game_over.style.display='block';
+                                game_interface.style.display='none';
+                               }
+                               console.log('trio');
+                               return 1;
+                         }else{
+                              if(container[1].innerHTML == sign){
+                             end_box.innerHTML = 'PLAYER ONE WON THE GAME';
+                              }else{
+                                end_box.innerHTML = 'PLAYER TWO WON THE GAME';
+                              }
+                             game_over.style.display='block';
+                                game_interface.style.display='none';
+                             return 1;
+                         }
+              }
+               if(container[3].innerHTML == container[4].innerHTML && container[4].innerHTML == container[5].innerHTML && container[5].innerHTML !== ''){
+                console.log('yes man .,.,.,.');
+                if(player_count == 1){
+                                if(sign == container[3].innerHTML){
+                                end_box.innerHTML= 'YOU WON THE GAME';
+                                game_over.style.display='block';
+                                game_interface.style.display='none';
+                                }else{
+                                end_box.innerHTML='SORRY! YOU LOST';
+                                game_over.style.display='block';
+                                game_interface.style.display='none';
+                               }
+                               console.log('trio');
+                               return 1;
+                         }else{
+                          if(container[3].innerHTML == sign){
+                             end_box.innerHTML = 'PLAYER ONE WON THE GAME';
+                              }else{
+                                end_box.innerHTML = 'PLAYER TWO WON THE GAME';
+                              }
+                             game_over.style.display='block';
+                                game_interface.style.display='none';
+                             return 1;
+                         }
+
+              }
+               if(container[6].innerHTML == container[7].innerHTML && container[7].innerHTML == container[8].innerHTML && container[8].innerHTML !== ''){
+                console.log('yes man .,.,.,.');
+                if(player_count == 1){
+                                if(sign == container[7].innerHTML){
+                                end_box.innerHTML= 'YOU WON THE GAME';
+                                game_over.style.display='block';
+                                game_interface.style.display='none';
+                                }else{
+                                end_box.innerHTML='SORRY! YOU LOST';
+                                game_over.style.display='block';
+                                game_interface.style.display='none';
+                               }
+                               console.log('trio');
+                               return 1;
+                         }else{
+                          if(container[6].innerHTML == sign){
+                             end_box.innerHTML = 'PLAYER ONE WON THE GAME';
+                              }else{
+                                end_box.innerHTML = 'PLAYER TWO WON THE GAME';
+                              }
+                             game_over.style.display='block';
+                                game_interface.style.display='none';
+                             return 1;
+                         }
+
+              }
+               if(container[0].innerHTML == container[3].innerHTML && container[3].innerHTML == container[6].innerHTML && container[6].innerHTML !== ''){
+                console.log('yes man .,.,.,.');
+                if(player_count == 1){
+                                if(sign == container[0].innerHTML){
+                                end_box.innerHTML= 'YOU WON THE GAME';
+                                game_over.style.display='block';
+                                game_interface.style.display='none';
+                                }else{
+                                end_box.innerHTML='SORRY! YOU LOST';
+                                game_over.style.display='block';
+                                game_interface.style.display='none';
+                               }
+                               console.log('trio');
+                               return 1;
+                         }else{
+                          if(container[0].innerHTML == sign){
+                             end_box.innerHTML = 'PLAYER ONE WON THE GAME';
+                              }else{
+                                end_box.innerHTML = 'PLAYER TWO WON THE GAME';
+                              }
+                             game_over.style.display='block';
+                                game_interface.style.display='none';
+                             return 1;
+                         }
+
+              }
+               if(container[1].innerHTML == container[4].innerHTML && container[4].innerHTML == container[7].innerHTML && container[7].innerHTML !== ''){
+                console.log('yes man .,.,.,.');
+                if(player_count == 1){
+                                if(sign == container[1].innerHTML){
+                                end_box.innerHTML= 'YOU WON THE GAME';
+                                game_over.style.display='block';
+                                game_interface.style.display='none';
+                                }else{
+                                end_box.innerHTML='SORRY! YOU LOST';
+                                game_over.style.display='block';
+                                game_interface.style.display='none';
+                               }
+                               console.log('trio');
+                               return 1;
+                         }else{
+                          if(container[1].innerHTML == sign){
+                             end_box.innerHTML = 'PLAYER ONE WON THE GAME';
+                              }else{
+                                end_box.innerHTML = 'PLAYER TWO WON THE GAME';
+                              }
+                             game_over.style.display='block';
+                                game_interface.style.display='none';
+                             return 1;
+                         }
+
+              }
+               if(container[2].innerHTML == container[5].innerHTML && container[5].innerHTML == container[8].innerHTML && container[8].innerHTML !== ''){
+                console.log('yes man .,.,.,.');
+                if(player_count == 1){
+                                if(sign == container[5].innerHTML){
+                                end_box.innerHTML= 'YOU WON THE GAME';
+                                game_over.style.display='block';
+                                game_interface.style.display='none';
+                                }else{
+                                end_box.innerHTML='SORRY! YOU LOST';
+                                game_over.style.display='block';
+                                game_interface.style.display='none';
+                               }
+                               console.log('trio');
+                               return 1;
+                         }else{
+                          if(container[2].innerHTML == sign){
+                             end_box.innerHTML = 'PLAYER ONE WON THE GAME';
+                              }else{
+                                end_box.innerHTML = 'PLAYER TWO WON THE GAME';
+                              }
+                             game_over.style.display='block';
+                                game_interface.style.display='none';
+                             return 1;
+                         }
+
+              }
+               if(container[0].innerHTML == container[4].innerHTML && container[4].innerHTML == container[8].innerHTML && container[8].innerHTML !== ''){
+                console.log('yes man .,.,.,.');
+                if(player_count == 1){
+                                if(sign == container[4].innerHTML){
+                                end_box.innerHTML= 'YOU WON THE GAME';
+                                game_over.style.display='block';
+                                game_interface.style.display='none';
+                                }else{
+                                end_box.innerHTML='SORRY! YOU LOST';
+                                game_over.style.display='block';
+                                game_interface.style.display='none';
+                               }
+                               console.log('trio');
+                               return 1;
+                         }else{
+                          if(container[0].innerHTML == sign){
+                             end_box.innerHTML = 'PLAYER ONE WON THE GAME';
+                              }else{
+                                end_box.innerHTML = 'PLAYER TWO WON THE GAME';
+                              }
+                             game_over.style.display='block';
+                                game_interface.style.display='none';
+                             return 1;
+                         }
+
+              }
+               if(container[2].innerHTML == container[4].innerHTML && container[4].innerHTML == container[6].innerHTML && container[4].innerHTML !== ''){
+                if(player_count == 1){
+                                if(sign == container[2].innerHTML){
+                                end_box.innerHTML= 'YOU WON THE GAME';
+                                game_over.style.display='block';
+                                game_interface.style.display='none';
+                                }else{
+                                end_box.innerHTML='SORRY! YOU LOST';
+                                game_over.style.display='block';
+                                game_interface.style.display='none';
+                               }
+                               console.log('trio');
+                               return 1;
+                         }else{
+                          if(container[2].innerHTML == sign){
+                             end_box.innerHTML = 'PLAYER ONE WON THE GAME';
+                              }else{
+                                end_box.innerHTML = 'PLAYER TWO WON THE GAME';
+                              }
+                             game_over.style.display='block';
+                             game_interface.style.display='none';
+                             return 1;
+                         }
+
+              }else if(tie == 9){
+                console.log('abcdefghi  ---');
+              end_box.innerHTML = 'IT WAS A TIE'
+              game_over.style.display='block';
+              game_interface.style.display='none';
+              return 1;
+              }
+
+        }
+
+        //first check ---> This function is used in single player mode . It checks whether the user wins the game
+        function first_check(player_count,sign,symbol){
+
+          setTimeout(function timer(){
+
+            var a = checker(player_count,sign);
+
+            if(a !== 1){
+                let i=0,self_count = 0;
+                while(i<9){
+                    console.log(i);
+                    if(container[i].innerHTML == container[i+1].innerHTML && container[i+1].innerHTML == symbol && container[i].innerHTML == symbol){
+                    console.log('inspect');
+                      if(container[i+2].innerHTML == ''){
+                          self_count++;
+                          if(sign == 'X'){
+                          container[i+2].innerHTML = 'O';
+                          }else{
+                            container[i+2].innerHTML = 'X';
+                          }
+                          checker(1,sign);
+                      }
+                    }
+                    if(container[i+1].innerHTML == container[i+2].innerHTML && container[i+1].innerHTML == symbol && container[i+2].innerHTML == symbol){
+                    console.log('inspect');
+                      if(container[i].innerHTML == ''){
+                        self_count++;
+                          if(sign == 'X'){
+                          container[i].innerHTML = 'O';
+                          }else{
+                            container[i].innerHTML = 'X';
+                          }
+                          checker(1,sign);
+                      }
+                    }
+                    if(container[i].innerHTML == container[i+2].innerHTML && container[i+2].innerHTML == symbol && container[i].innerHTML == symbol){
+                    console.log('inspect');
+                      if(container[i+1].innerHTML == ''){
+                        self_count++;
+                          if(sign == 'X'){
+                          container[i+1].innerHTML = 'O';
+                          }else{
+                            container[i+1].innerHTML = 'X';
+                          }
+                          checker(1,sign);
+                      }
+                    }
+                    i=i+3;
+                }
+            i=0;
+
+            if(self_count == 0)
+                while(i<3){
+                    console.log(i);
+                    if(container[i].innerHTML == container[i+3].innerHTML && container[i+3].innerHTML == symbol && container[i].innerHTML == symbol){
+                    console.log('inspect');
+                      if(container[i+6].innerHTML == ''){
+                        self_count++;
+                          if(sign == 'X'){
+                          container[i+6].innerHTML = 'O';
+                          }else{
+                            container[i+6].innerHTML = 'X';
+                          }
+                          checker(1,sign);
+                          break;
+                      }
+                    }
+                    if(container[i+3].innerHTML == container[i+6].innerHTML && container[i+3].innerHTML == symbol && container[i+6].innerHTML == symbol){
+                    console.log('inspect');
+                      if(container[i].innerHTML == ''){
+                        self_count++;
+                          if(sign == 'X'){
+                          container[i].innerHTML = 'O';
+                          }else{
+                            container[i].innerHTML = 'X';
+                          }
+                          checker(1,sign);
+                          break;
+                      }
+                    }
+                    if(container[i].innerHTML == container[i+6].innerHTML && container[i+6].innerHTML == symbol && container[i].innerHTML == symbol){
+                    console.log('inspect');
+                      if(container[i+3].innerHTML == ''){
+                        self_count++;
+                          if(sign == 'X'){
+                          container[i+3].innerHTML = 'O';
+                          }else{
+                            container[i+3].innerHTML = 'X';
+                          }
+                          checker(1,sign);
+                          break;
+                      }
+                    }
+                    i=i+1;
+                }
+                if(self_count == 0){
+                if(container[0].innerHTML == container[4].innerHTML && container[0].innerHTML == symbol && container[4].innerHTML == symbol){
+                    if(container[8].innerHTML == ''){
+                        self_count++;
+                          if(sign == 'X'){
+                          container[8].innerHTML = 'O';
+                          }else{
+                            container[8].innerHTML = 'X';
+                          }
+                          checker(1,sign);
+                      }
+                }
+                if(container[0].innerHTML == container[8].innerHTML && container[0].innerHTML == symbol && container[8].innerHTML == symbol){
+                    if(container[4].innerHTML == ''){
+                        self_count++;
+                          if(sign == 'X'){
+                          container[4].innerHTML = 'O';
+                          }else{
+                            container[4].innerHTML = 'X';
+                          }
+                          checker(1,sign);
+                      }
+                }
+                if(container[8].innerHTML == container[4].innerHTML && container[8].innerHTML == symbol && container[4].innerHTML == symbol){
+                    if(container[0].innerHTML == ''){
+                        self_count++;
+                          if(sign == 'X'){
+                          container[0].innerHTML = 'O';
+                          }else{
+                            container[0].innerHTML = 'X';
+                          }
+                          checker(1,sign);
+                      }
+                   }
+                }
+
+                if(self_count == 0){
+
+                if(container[2].innerHTML == container[4].innerHTML && container[2].innerHTML == symbol && container[4].innerHTML == symbol){
+                    if(container[6].innerHTML == ''){
+                        self_count++;
+                          if(sign == 'X'){
+                          container[6].innerHTML = 'O';
+                          }else{
+                            container[6].innerHTML = 'X';
+                          }
+                          checker(1,sign);
+                      }
+                }
+                if(container[2].innerHTML == container[6].innerHTML && container[2].innerHTML == symbol && container[6].innerHTML == symbol){
+                    if(container[4].innerHTML == ''){
+                        self_count++;
+                          if(sign == 'X'){
+                          container[4].innerHTML = 'O';
+                          }else{
+                            container[4].innerHTML = 'X';
+                          }
+                          checker(1,sign);
+                      }
+                }
+                if(container[6].innerHTML == container[4].innerHTML && container[6].innerHTML == symbol && container[4].innerHTML == symbol){
+                    if(container[2].innerHTML == ''){
+                        self_count++;
+                          if(sign == 'X'){
+                          container[2].innerHTML = 'O';
+                          }else{
+                            container[2].innerHTML = 'X';
+                          }
+                          checker(1,sign);
+                      }
+                  }
+                }
+                if(self_count == 0){
+                    self_side(sign);
+                }
+
+            }
+
+          },1000);
+        }
+
+
+
+
+        //self side --> This function defines some rules for computer to play witn the user.It checks whether the comuter wins the game
+        function self_side(intake){
+                let i=0,ai_count = 0;
+                while(i<9){
+                    console.log(i);
+                    if(container[i].innerHTML == container[i+1].innerHTML && container[i+1].innerHTML == intake && container[i].innerHTML == intake){
+                    console.log('inspect');
+                      if(container[i+2].innerHTML == ''){
+                          ai_count++;
+                          if(intake == 'X'){
+                          container[i+2].innerHTML = 'O';
+                          }else{
+                            container[i+2].innerHTML = 'X';
+                          }
+                          checker(1,sign);
+                      }
+                    }
+                    if(container[i+1].innerHTML == container[i+2].innerHTML && container[i+1].innerHTML == intake && container[i+2].innerHTML == intake){
+                    console.log('inspect');
+                      if(container[i].innerHTML == ''){
+                        ai_count++;
+                          if(intake == 'X'){
+                          container[i].innerHTML = 'O';
+                          }else{
+                            container[i].innerHTML = 'X';
+                          }
+                          checker(1,sign);
+                      }
+                    }
+                    if(container[i].innerHTML == container[i+2].innerHTML && container[i+2].innerHTML == intake && container[i].innerHTML == intake){
+                    console.log('inspect');
+                      if(container[i+1].innerHTML == ''){
+                        ai_count++;
+                          if(intake == 'X'){
+                          container[i+1].innerHTML = 'O';
+                          }else{
+                            container[i+1].innerHTML = 'X';
+                          }
+                          checker(1,sign);
+                      }
+                    }
+                    i=i+3;
+                }
+            i=0;
+
+            if(ai_count == 0)
+                while(i<3){
+                    console.log(i);
+                    if(container[i].innerHTML == container[i+3].innerHTML && container[i+3].innerHTML == intake && container[i].innerHTML == intake){
+                    console.log('inspect');
+                      if(container[i+6].innerHTML == ''){
+                        ai_count++;
+                          if(intake == 'X'){
+                          container[i+6].innerHTML = 'O';
+                          }else{
+                            container[i+6].innerHTML = 'X';
+                          }
+                          checker(1,sign);
+                          break;
+                      }
+                    }
+                    if(container[i+3].innerHTML == container[i+6].innerHTML && container[i+3].innerHTML == intake && container[i+6].innerHTML == intake){
+                    console.log('inspect');
+                      if(container[i].innerHTML == ''){
+                        ai_count++;
+                          if(intake == 'X'){
+                          container[i].innerHTML = 'O';
+                          }else{
+                            container[i].innerHTML = 'X';
+                          }
+                          checker(1,sign);
+                          break;
+                      }
+                    }
+                    if(container[i].innerHTML == container[i+6].innerHTML && container[i+6].innerHTML == intake && container[i].innerHTML == intake){
+                    console.log('inspect');
+                      if(container[i+3].innerHTML == ''){
+                        ai_count++;
+                          if(intake == 'X'){
+                          container[i+3].innerHTML = 'O';
+                          }else{
+                            container[i+3].innerHTML = 'X';
+                          }
+                          checker(1,sign);
+                          break;
+                      }
+                    }
+                    i=i+1;
+                }
+                if(ai_count == 0){
+                if(container[0].innerHTML == container[4].innerHTML && container[0].innerHTML == intake && container[4].innerHTML == intake){
+                    if(container[8].innerHTML == ''){
+                        ai_count++;
+                          if(intake == 'X'){
+                          container[8].innerHTML = 'O';
+                          }else{
+                            container[8].innerHTML = 'X';
+                          }
+                          checker(1,sign);
+                      }
+                }
+                if(container[0].innerHTML == container[8].innerHTML && container[0].innerHTML == intake && container[8].innerHTML == intake){
+                    if(container[4].innerHTML == ''){
+                        ai_count++;
+                          if(intake == 'X'){
+                          container[4].innerHTML = 'O';
+                          }else{
+                            container[4].innerHTML = 'X';
+                          }
+                          checker(1,sign);
+                      }
+                }
+                if(container[8].innerHTML == container[4].innerHTML && container[8].innerHTML == intake && container[4].innerHTML == intake){
+                    if(container[0].innerHTML == ''){
+                        ai_count++;
+                          if(intake == 'X'){
+                          container[0].innerHTML = 'O';
+                          }else{
+                            container[0].innerHTML = 'X';
+                          }
+                          checker(1,sign);
+                      }
+                   }
+                }
+
+                if(ai_count == 0){
+
+                if(container[2].innerHTML == container[4].innerHTML && container[2].innerHTML == intake && container[4].innerHTML == intake){
+                    if(container[6].innerHTML == ''){
+                        ai_count++;
+                          if(intake == 'X'){
+                          container[6].innerHTML = 'O';
+                          }else{
+                            container[6].innerHTML = 'X';
+                          }
+                          checker(1,sign);
+                      }
+                }
+                if(container[2].innerHTML == container[6].innerHTML && container[2].innerHTML == intake && container[6].innerHTML == intake){
+                    if(container[4].innerHTML == ''){
+                        ai_count++;
+                          if(intake == 'X'){
+                          container[4].innerHTML = 'O';
+                          }else{
+                            container[4].innerHTML = 'X';
+                          }
+                          checker(1,sign);
+                      }
+                }
+                if(container[6].innerHTML == container[4].innerHTML && container[6].innerHTML == intake && container[4].innerHTML == intake){
+                    if(container[2].innerHTML == ''){
+                        ai_count++;
+                          if(intake == 'X'){
+                          container[2].innerHTML = 'O';
+                          }else{
+                            container[2].innerHTML = 'X';
+                          }
+                          checker(1,sign);
+                      }
+                  }
+                }
+                if(ai_count == 0){
+                    ai(intake);
+                }
+
+            }
+
+
+        //ARTIFICIAL INTELLIGENCE - for randomly ticking the blocks.
+         function ai(sign){
+           var random = Math.floor(Math.random()*9);
+             console.log(container[random].innerHTML == '',sign,container[random].innerHTML);
+             if(container[random].innerHTML == '' ){
+                 if(sign == 'O'){
+                container[random].innerHTML = 'X';
+                 }else{
+                    container[random].innerHTML = 'O';
+                 }
+                 checker(1,sign);
+             }else{
+                 console.log('repeat');
+                 ai(sign);
+             }
+         }
+
+       
+
+         //main function
+         function response(itr){
+             console.log(sign_in);
+
+             if(container[itr].innerHTML == "")
+            if(counter == 1){
+                container[itr].innerHTML = sign_in;
+                if(sign_in == "X")
+                {indicator = 'O';
+              }else
+              {indicator = 'X';}
+                first_check(counter,sign_in,indicator);
+            }else{
+              if(xo_count%2 == 0){
+                console.log(xo_count);
+
+                    container[itr].innerHTML = 'X';
+                    xo_count++;
+                 }else{
+                    container[itr].innerHTML = 'O';
+                    console.log(xo_count);
+                    xo_count++;
+                 }
+
+                checker(counter,sign_in);
+            }
+
+         }
+    </script>
+</html>
